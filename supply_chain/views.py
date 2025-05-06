@@ -398,7 +398,11 @@ class ОтчетОДоставкеDeleteView(LoginRequiredMixin, DeleteView):
         messages.success(self.request, 'Отчет о доставке успешно удален.')
         return super().delete(request, *args, **kwargs)
 
-
+class ОтчетОДоставкеDetailView(DetailView):
+    model = ОтчетОДоставке
+    template_name = 'supply_chain/отчет_detail.html'
+    context_object_name = 'отчет'
+    
 class ФинансовыйОтчетListView(LoginRequiredMixin, ListView):
     model = ФинансовыйОтчет
     template_name = 'supply_chain/финансовый_отчет_list.html'  #  ВАШЕ НАЗВАНИЕ
@@ -534,3 +538,8 @@ def get_carrier_data(request):
         })
     except (Перевозчик.DoesNotExist, ValueError):
         return JsonResponse({'success': False})
+    
+class ДоговорDetailView(DetailView):
+    model = Договор
+    template_name = 'supply_chain/договор_detail.html'
+    context_object_name = 'договор'

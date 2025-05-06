@@ -1,102 +1,106 @@
 {% extends 'supply_chain/base.html' %}
 
-{% block title %}Список отчетов о доставке{% endblock %}
+{% block title %}
+    Список отчетов о доставке
+{% endblock %}
 
 {% block content %}
-    <div class="delivery-reports-container">
-        <div class="page-header">
-            <h1>Список отчетов о доставке</h1>
-            <p class="subtitle">Управление всеми отчетами о доставке товаров</p>
-        </div>
-
-        <div class="action-bar">
-            <a href="{% url 'отчет_о_доставке_form' %}" class="create-btn">
-                <span class="btn-icon">+</span> Добавить отчет
-            </a>
-            
-            <form method="get" class="search-form">
-                <div class="search-input-container">
-                    <input type="text" name="search" placeholder="Поиск по номеру накладной" value="{{ search_term }}">
-                    <button type="submit" class="search-btn">
-                        <span class="search-icon">🔍</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        {% if отчеты %}
-            <div class="table-container">
-                <table class="modern-table">
-                    <thead>
-                        <tr>
-                            <th>Номер накладной</th>
-                            <th>Дата доставки</th>
-                            <th>Транспортная накладная</th>
-                            <th>Водитель</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for отчет in отчеты %}
-                            <tr>
-                                <td>{{ отчет.номер_накладной }}</td>
-                                <td>{{ отчет.дата_доставки|date:"d.m.Y" }}</td>
-                                <td>{{ отчет.транспортная_накладная }}</td>
-                                <td>{{ отчет.водитель }}</td>
-                                <td class="actions-cell">
-                                    <div class="action-buttons">
-                                        <a href="{% url 'отчет_о_доставке_form' отчет.pk %}" class="action-btn edit-btn" title="Редактировать">
-                                            <span class="action-icon">✏️</span>
-                                        </a>
-                                        <a href="{% url 'отчет_о_доставке_confirm_delete' отчет.pk %}" class="action-btn delete-btn" title="Удалить">
-                                            <span class="action-icon">🗑️</span>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="pagination-container">
-                <div class="pagination">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1{% if search_term %}&search={{ search_term }}{% endif %}" class="page-nav first" title="Первая страница">
-                            <span>«</span>
-                        </a>
-                        <a href="?page={{ page_obj.previous_page_number }}{% if search_term %}&search={{ search_term }}{% endif %}" class="page-nav prev" title="Предыдущая страница">
-                            <span>‹</span>
-                        </a>
-                    {% endif %}
-
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <span class="page-number active">{{ num }}</span>
-                        {% else %}
-                            <a href="?page={{ num }}{% if search_term %}&search={{ search_term }}{% endif %}" class="page-number">{{ num }}</a>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}{% if search_term %}&search={{ search_term }}{% endif %}" class="page-nav next" title="Следующая страница">
-                            <span>›</span>
-                        </a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}{% if search_term %}&search={{ search_term }}{% endif %}" class="page-nav last" title="Последняя страница">
-                            <span>»</span>
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        {% else %}
-            <div class="empty-state">
-                <div class="empty-icon">🚚</div>
-                <h3>Нет доступных отчетов о доставке</h3>
-                <p>Создайте новый отчет, нажав на кнопку выше</p>
-            </div>
-        {% endif %}
+<div class="delivery-reports-container">
+    <div class="page-header">
+        <h1>Список отчетов о доставке</h1>
+        <p class="subtitle">Управление всеми отчетами о доставке товаров</p>
     </div>
 
+    <div class="action-bar">
+        <a href="{% url 'отчет_о_доставке_create' %}" class="create-btn">
+            <span class="btn-icon">+</span> Добавить отчет
+        </a>
+
+        <form method="get" class="search-form">
+            <div class="search-input-container">
+                <input type="text" name="search" placeholder="Поиск по номеру накладной" value="{{ search_term }}">
+                <button type="submit" class="search-btn">
+                    <span class="search-icon">🔍</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {% if отчеты %}
+        <div class="table-container">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Номер накладной</th>
+                        <th>Дата доставки</th>
+                        <th>Транспортная накладная</th>
+                        <th>Водитель</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for отчет in отчеты %}
+                        <tr>
+                            <td>{{ отчет.номер_накладной }}</td>
+                            <td>{{ отчет.дата_доставки|date:"d.m.Y" }}</td>
+                            <td>{{ отчет.транспортная_накладная }}</td>
+                            <td>{{ отчет.водитель }}</td>
+                            <td class="actions-cell">
+                                <div class="action-buttons">
+                                    <a href="{% url 'отчет_о_доставке_update' отчет.pk %}" class="action-btn edit-btn" title="Редактировать">
+                                        <span class="action-icon">✏️</span>
+                                    </a>
+                                    <a href="{% url 'отчет_о_доставке_detail' отчет.pk %}" class="action-btn detail-btn" title="Подробнее">
+                                        <span class="action-icon">🔍</span>
+                                    </a>
+                                    <a href="{% url 'отчет_о_доставке_confirm_delete' отчет.pk %}" class="action-btn delete-btn" title="Удалить">
+                                        <span class="action-icon">🗑️</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination-container">
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if search_term %}&search={{ search_term }}{% endif %}" class="page-nav first" title="Первая страница">
+                        <span>«</span>
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if search_term %}&search={{ search_term }}{% endif %}" class="page-nav prev" title="Предыдущая страница">
+                        <span>‹</span>
+                    </a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <span class="page-number active">{{ num }}</span>
+                    {% else %}
+                        <a href="?page={{ num }}{% if search_term %}&search={{ search_term }}{% endif %}" class="page-number">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if search_term %}&search={{ search_term }}{% endif %}" class="page-nav next" title="Следующая страница">
+                        <span>›</span>
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if search_term %}&search={{ search_term }}{% endif %}" class="page-nav last" title="Последняя страница">
+                        <span>»</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🚚</div>
+            <h3>Нет доступных отчетов о доставке</h3>
+            <p>Создайте новый отчет, нажав на кнопку выше</p>
+        </div>
+    {% endif %}
+</div>
     <style>
         .delivery-reports-container {
             max-width: 1200px;

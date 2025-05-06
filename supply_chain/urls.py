@@ -58,6 +58,7 @@ urlpatterns = [
     path('договоры/create/', views.ДоговорCreateView.as_view(), name='договор_create'),
     path('договоры/<int:pk>/update/', views.ДоговорUpdateView.as_view(), name='договор_update'),
     path('договоры/<int:pk>/delete/', views.ДоговорDeleteView.as_view(), name='договор_delete'),
+    path('договоры/<int:pk>/', views.ДоговорDetailView.as_view(), name='договор_detail'), 
 
     #  Транспортные накладные
     path('накладные/', views.ТранспортнаяНакладнаяListView.as_view(), name='транспортная_накладная_list'),
@@ -66,11 +67,13 @@ urlpatterns = [
     path('накладные/<int:pk>/delete/', views.ТранспортнаяНакладнаяDeleteView.as_view(), name='транспортная_накладная_delete'),
 
     #  Отчеты о доставке
+    path('отчет/<int:pk>/', views.ОтчетОДоставкеDetailView.as_view(), name='отчет_о_доставке_detail'),
     path('отчеты/', views.ОтчетОДоставкеListView.as_view(), name='отчет_о_доставке_list'),
     path('отчеты/create/', views.ОтчетОДоставкеCreateView.as_view(), name='отчет_о_доставке_create'),
     path('отчеты/<int:pk>/update/', views.ОтчетОДоставкеUpdateView.as_view(), name='отчет_о_доставке_update'),
-    path('отчеты/создать/', views.ОтчетОДоставкеCreateView.as_view(), name='отчет_о_доставке_form'),
-    path('отчеты/<int:pk>/delete/', views.ОтчетОДоставкеDeleteView.as_view(), name='отчет_о_доставке_delete'),
+    path('отчеты/создать/<int:заказ_id>/', views.ОтчетОДоставкеCreateView.as_view(), name='отчет_о_доставке_form'),
+    path('отчеты/<int:pk>/delete/', views.ОтчетОДоставкеDeleteView.as_view(), name='отчет_о_доставке_confirm_delete'),
+    
 
     #  Финансовые отчеты
     path('фин_отчеты/', views.ФинансовыйОтчетListView.as_view(), name='финансовый_отчет_list'),

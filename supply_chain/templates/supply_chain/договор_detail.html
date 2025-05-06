@@ -1,0 +1,183 @@
+{% extends 'supply_chain/base.html' %}
+
+{% block title %}Детали Договора: {{ договор.номер }}{% endblock %}
+
+{% block content %}
+    <div class="detail-header">
+        <h1>Договор <span class="highlight-number">№{{ договор.номер }}</span></h1>
+        <p class="status-badge status-{{ договор.статус|lower }}">{{ договор.статус }}</p>
+    </div>
+
+    <div class="detail-container">
+        <div class="detail-card">
+            <div class="card-header">
+                <h2>Основные реквизиты</h2>
+                <div class="card-actions">
+                    <a href="{% url 'договор_update' договор.pk %}" class="action-btn edit-btn">
+                        <span class="btn-icon">✏️</span> Редактировать
+                    </a>
+                    <a href="{% url 'договор_delete' договор.pk %}" class="action-btn delete-btn">
+                        <span class="btn-icon">🗑️</span> Удалить
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Номер договора:</span>
+                        <span class="info-value">{{ договор.номер }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Дата заключения:</span>
+                        <span class="info-value">{{ договор.дата_заключения|date:"d.m.Y" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Поставщик:</span>
+                        <span class="info-value">{{ договор.поставщик }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Срок действия:</span>
+                        <span class="info-value">{{ договор.срок_действия|date:"d.m.Y" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Условия оплаты:</span>
+                        <span class="info-value">{{ договор.условия_оплаты }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Условия поставки:</span>
+                        <span class="info-value">{{ договор.условия_поставки }}</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <span class="info-label">Комментарий:</span>
+                        <span class="info-value">{{ договор.комментарий|default:"-" }}</span>
+                    </div>
+                </div>
+
+                <!-- Блок с прикрепленными файлами -->
+                {% if договор.файлы.all %}
+                <div class="attachments-section">
+                    <h3>Прикрепленные файлы</h3>
+                    <ul class="attachments-list">
+                        {% for файл in договор.файлы.all %}
+                        <li>
+                            <a href="{{ файл.файл.url }}" target="_blank" class="file-link">
+                                <span class="file-icon">📄</span> {{ файл.название }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="card-footer">
+                <a href="{% url 'договор_list' %}" class="back-btn">
+                    <span class="btn-icon">←</span> Вернуться к списку
+                </a>
+            </div>
+        </div>
+
+        <!-- Блок истории изменений -->
+        <div class="history-section">
+            <h2>История изменений</h2>
+            <div class="history-timeline">
+                {% for запись in договор.history.all %}
+                <div class="history-item">
+                    <div class="history-date">{{ запись.history_date|date:"d.m.Y H:i" }}</div>
+                    <div class="history-user">{{ запись.history_user.get_full_name|default:запись.history_user.username }}</div>
+                    <div class="history-change">
+                        {% if запись.history_type == '+' %}Создан{% endif %}
+                        {% if запись.history_type == '~' %}Изменен{% endif %}
+                        {% if запись.history_type == '-' %}Удален{% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p class="no-history">История изменений отсутствует</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Стили для этого шаблона -->
+    <style>
+        .highlight-number {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-active { background-color: #d4edda; color: #155724; }
+        .status-draft { background-color: #fff3cd; color: #856404; }
+        .status-archived { background-color: #f8d7da; color: #721c24; }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+        }
+        
+        .info-value {
+            display: block;
+            margin-top: 5px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .attachments-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .file-link {
+            display: inline-block;
+            padding: 8px 12px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .history-timeline {
+            border-left: 2px solid #dee2e6;
+            padding-left: 20px;
+        }
+        
+        .history-item {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .history-item::before {
+            content: "";
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #6c757d;
+        }
+    </style>
+{% endblock %}
