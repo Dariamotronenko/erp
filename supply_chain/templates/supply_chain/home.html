@@ -1,0 +1,260 @@
+{% extends 'supply_chain/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <div class="welcome-card">
+        <div class="welcome-content">
+            <h1>Добро пожаловать в систему управления поставками!</h1>
+            <p class="lead-text">
+                Это централизованная система для эффективного управления на каждом из этапов: от заявок до финансовых отчетов.
+            </p>
+            <div class="divider"></div>
+            <p class="secondary-text">
+                Используйте навигационное меню слева для доступа к основным разделам системы.
+            </p>
+            <a class="primary-btn" href="{% url 'заявка_на_поставку_list' %}" role="button">
+                Перейти к Заявкам
+                <span class="btn-icon">→</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="features-section">
+            <h2 class="section-title">Основные Функции</h2>
+            <ul class="feature-list">
+                <li class="feature-item">
+                    <span class="feature-icon">📦</span>
+                    Управление Заявками на Поставку
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">🏭</span>
+                    Ведение Справочника Поставщиков
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">🚚</span>
+                    Управление Перевозчиками
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">📄</span>
+                    Работа с Договорами
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">📋</span>
+                    Формирование Транспортных Накладных
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">📑</span>
+                    Генерация Отчетов о Доставке
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">💰</span>
+                    Формирование Финансовых Отчетов
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    Анализ Финансовых Данных за Период
+                </li>
+            </ul>
+        </div>
+    </div>
+    <style>
+        .welcome-card {
+            background-color: #fff9cc;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .welcome-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+        }
+        
+        .welcome-content h1 {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .lead-text {
+            font-size: 1.2rem;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, #fff9cc 0%, #e6c200 50%, #fff9cc 100%);
+            margin: 1.5rem 0;
+            opacity: 0.5;
+        }
+        
+        .secondary-text {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+        
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: #fff3a0;
+            color: #333;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: none;
+        }
+        
+        .primary-btn:hover {
+            background-color: #ffe872;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            color: #000;
+        }
+        
+        .btn-icon {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .primary-btn:hover .btn-icon {
+            transform: translateX(4px);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+        
+        .features-section {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #fff3a0;
+            border-radius: 3px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .feature-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .feature-icon {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .stats-section {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: #fffef5;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid #fff3a0;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+        }
+        
+        .stat-content h5 {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .stat-trend {
+            font-size: 0.85rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        
+        .stat-trend.up {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .stat-trend.down {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        .stat-trend.neutral {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+{% endblock %}

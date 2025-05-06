@@ -1,0 +1,214 @@
+{% extends 'supply_chain/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} Договора{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <div class="form-header">
+            <h1>{% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} Договора</h1>
+            <p class="form-subtitle">Пожалуйста, заполните все поля</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="contract-form">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="form-errors">
+                    <div class="error-icon">!</div>
+                    <div>
+                        <h4>Обнаружены ошибки:</h4>
+                        <ul>
+                            {% for field in form %}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="form-grid">
+                <div class="form-section">
+                    <h2 class="section-title">Информация о договоре</h2>
+
+                    <div class="form-group">
+                        <label for="{{ form.номер.id_for_label }}">Номер договора*</label>
+                        {{ form.номер }}
+                        {% if form.номер.errors %}
+                            <div class="error-message">{{ form.номер.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.дата_заключения.id_for_label }}">Дата заключения*</label>
+                        {{ form.дата_заключения }}
+                        {% if form.дата_заключения.errors %}
+                            <div class="error-message">{{ form.дата_заключения.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.поставщик.id_for_label }}">Поставщик*</label>
+                        {{ form.поставщик }}
+                        {% if form.поставщик.errors %}
+                            <div class="error-message">{{ form.поставщик.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.заявка.id_for_label }}">Заявка на поставку*</label>
+                        {{ form.заявка }}
+                        {% if form.заявка.errors %}
+                            <div class="error-message">{{ form.заявка.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.условия_оплаты.id_for_label }}">Условия оплаты*</label>
+                        {{ form.условия_оплаты }}
+                        {% if form.условия_оплаты.errors %}
+                            <div class="error-message">{{ form.условия_оплаты.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.условия_поставки.id_for_label }}">Условия поставки*</label>
+                        {{ form.условия_поставки }}
+                        {% if form.условия_поставки.errors %}
+                            <div class="error-message">{{ form.условия_поставки.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.срок_действия.id_for_label }}">Срок действия договора*</label>
+                        {{ form.срок_действия }}
+                        {% if form.срок_действия.errors %}
+                            <div class="error-message">{{ form.срок_действия.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.файл.id_for_label }}">Скан договора (PDF)</label>
+                        {{ form.файл }}
+                        {% if form.файл.errors %}
+                            <div class="error-message">{{ form.файл.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">
+                    {% if form.instance.pk %}Сохранить изменения{% else %}Создать Договор{% endif %}
+                </button>
+                <a href="{% url 'договор_list' %}" class="cancel-btn">Отмена</a>
+            </div>
+        </form>
+    </div>
+    <style>
+        .form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-header h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .form-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #444;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .form-actions {
+            margin-top: 25px;
+            text-align: right;
+        }
+        
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .cancel-btn {
+            padding: 10px 20px;
+            margin-left: 10px;
+            background: #f5f5f5;
+            color: #333;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+    </style>
+{% endblock %}

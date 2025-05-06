@@ -1,0 +1,16 @@
+{% extends 'supply_chain/base.html' %}
+
+{% block title %}Подтверждение Удаления Финансового Отчета{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Подтверждение Удаления Финансового Отчета</h1>
+        <p>Вы уверены, что хотите удалить финансовый отчет за {{ отчет.дата_отчета|date:"d.m.Y" }}?</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Подтвердить Удаление</button>
+            <a href="{% url 'финансовый_отчет_list' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,405 @@
+{% extends 'supply_chain/base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} отчета о доставке
+{% endblock %}
+
+{% block content %}
+    <div class="report-form-container">
+        <div class="form-header">
+            <h1>{% if form.instance.pk %}Редактирование{% else %}Новый{% endif %} отчет о доставке</h1>
+            <p class="form-subtitle">
+                {% if form.instance.pk %}
+                    Внесите изменения в данные отчета
+                {% else %}
+                    Заполните информацию о доставке
+                {% endif %}
+            </p>
+        </div>
+
+        <form method="post" class="report-form">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="form-errors">
+                    <div class="error-icon">!</div>
+                    <div>
+                        <h4>Пожалуйста, исправьте ошибки:</h4>
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="{{ form.дата_прибытия.id_for_label }}">Дата прибытия</label>
+                    {{ form.дата_прибытия }}
+                    <div class="form-hint">Выберите дату прибытия</div>
+                    {% if form.дата_прибытия.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.дата_прибытия.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.дата_убытия.id_for_label }}">Дата убытия</label>
+                    {{ form.дата_убытия }}
+                    <div class="form-hint">Выберите дату убытия</div>
+                    {% if form.дата_убытия.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.дата_убытия.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.пробег.id_for_label }}">Пробег</label>
+                    {{ form.пробег }}
+                    <div class="form-hint">Введите пробег</div>
+                    {% if form.пробег.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.пробег.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.время_в_пути.id_for_label }}">Время в пути</label>
+                    {{ form.время_в_пути }}
+                    <div class="form-hint">Введите время в пути (ЧЧ:ММ:СС)</div>
+                    {% if form.время_в_пути.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.время_в_пути.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="{{ form.транспортная_накладная.id_for_label }}">Транспортная накладная</label>
+                    {{ form.транспортная_накладная }}
+                    <div class="form-hint">Выберите соответствующую транспортную накладную</div>
+                    {% if form.транспортная_накладная.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.транспортная_накладная.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="{{ form.водитель.id_for_label }}">Водитель</label>
+                    {{ form.водитель }}
+                    <div class="form-hint">Выберите водителя из списка</div>
+                    {% if form.водитель.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.водитель.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="{{ form.транспортное_средство.id_for_label }}">Транспортное средство</label>
+                    {{ form.транспортное_средство }}
+                    <div class="form-hint">Выберите транспортное средство</div>
+                    {% if form.транспортное_средство.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.транспортное_средство.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="{{ form.статус.id_for_label }}">Статус доставки</label>
+                    {{ form.статус }} 
+                    <div class="form-hint">Выберите статус доставки</div>
+                    {% if form.статус.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.статус.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="{{ form.примечание.id_for_label }}">Примечание</label>
+                    {{ form.примечание }}
+                    <div class="form-hint">Дополнительная информация о доставке</div>
+                    {% if form.примечание.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.примечание.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.подтверждение_получателя.id_for_label }}">Подтверждение получателя</label>
+                    {{ form.подтверждение_получателя }}
+                    <div class="form-hint">Подтверждение доставки получателем</div>
+                    {% if form.подтверждение_получателя.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.подтверждение_получателя.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.фото_документов.id_for_label }}">Фото документов</label>
+                    {{ form.фото_документов }}
+                    <div class="form-hint">Фотографии документов о доставке</div>
+                    {% if form.фото_документов.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.фото_документов.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">
+                    <span class="btn-icon">✓</span> {% if form.instance.pk %}Сохранить{% else %}Создать{% endif %}
+                </button>
+                <a href="{% url 'отчет_о_доставке_list' %}" class="cancel-btn">Отмена</a>
+            </div>
+        </form>
+    </div>
+    <style>
+        .report-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .form-header {
+            margin-bottom: 30px;
+        }
+        
+        .form-header h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .form-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .report-form {
+            margin-top: 20px;
+        }
+        
+        .form-errors {
+            display: flex;
+            gap: 15px;
+            background-color: #ffebee;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #d32f2f;
+        }
+        
+        .error-icon {
+            font-size: 1.5rem;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .form-errors h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #d32f2f;
+        }
+        
+        .form-errors ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .form-errors li {
+            margin-bottom: 5px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #666;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #2196F3;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3);
+        }
+        
+        .form-hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .invalid-feedback {
+            color: #d32f2f;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
+        .delivery-status {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .status-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .status-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2196F3;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #2196F3;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0b7dda;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+        
+        .cancel-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-icon {
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .report-form-container {
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .submit-btn,
+            .cancel-btn {
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,355 @@
+{% extends 'supply_chain/base.html' %}
+
+{% block title %}Сформировать финансовый отчет{% endblock %}
+
+{% block content %}
+
+<div class="financial-report-form-container">
+
+    <div class="form-header">
+        <h1>Сформировать финансовый отчет</h1>
+        <p class="form-subtitle">
+            Введите данные для создания финансового отчета.
+        </p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="financial-report-form">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <div class="form-errors">
+                <div class="error-icon">!</div>
+                <div>
+                    <h4>Пожалуйста, исправьте ошибки:</h4>
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.период_начала.id_for_label }}">Начало периода</label>
+                <div class="input-with-icon">
+                    {{ form.период_начала }}
+                    <span class="input-icon">📅</span>
+                </div>
+                <div class="form-hint">Формат: ГГГГ-ММ-ДД</div>
+                {% if form.период_начала.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.период_начала.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.период_окончания.id_for_label }}">Окончание периода</label>
+                <div class="input-with-icon">
+                    {{ form.период_окончания }}
+                    <span class="input-icon">📅</span>
+                </div>
+                <div class="form-hint">Формат: ГГГГ-ММ-ДД</div>
+                {% if form.период_окончания.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.период_окончания.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.доходы.id_for_label }}">Сумма доходов</label>
+                <div class="input-with-icon">
+                    {{ form.доходы }}
+                    <span class="input-icon">₽</span>
+                </div>
+                {% if form.доходы.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.доходы.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.расходы.id_for_label }}">Сумма расходов</label>
+                <div class="input-with-icon">
+                    {{ form.расходы }}
+                    <span class="input-icon">₽</span>
+                </div>
+                {% if form.расходы.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.расходы.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.комментарий.id_for_label }}">Комментарий</label>
+                {{ form.комментарий }}
+                {% if form.комментарий.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.комментарий.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.файл.id_for_label }}">Файл отчета</label>
+                {{ form.файл }}
+                {% if form.файл.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.файл.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="submit-btn">
+                <span class="btn-icon">💾</span> Сохранить отчет
+            </button>
+            <a href="{% url 'финансовый_отчет_list' %}" class="cancel-btn">Отмена</a>
+        </div>
+    </form>
+</div>
+    <style>
+        .report-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .form-header {
+            margin-bottom: 30px;
+        }
+        
+        .form-header h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .form-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .report-form {
+            margin-top: 20px;
+        }
+        
+        .form-errors {
+            display: flex;
+            gap: 15px;
+            background-color: #ffebee;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #d32f2f;
+        }
+        
+        .error-icon {
+            font-size: 1.5rem;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .form-errors h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #d32f2f;
+        }
+        
+        .form-errors ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .form-errors li {
+            margin-bottom: 5px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+        
+        .form-hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .financial-summary {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .summary-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .summary-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #4CAF50;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .submit-btn:hover {
+            background-color: #3e8e41;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+        
+        .cancel-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-icon {
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .report-form-container {
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .submit-btn,
+            .cancel-btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const profitInput = document.querySelector('#{{ form.общая_прибыль.id_for_label }}');
+            const expensesInput = document.querySelector('#{{ form.общие_расходы.id_for_label }}');
+            const netProfitElement = document.getElementById('net-profit');
+            
+            function calculateNetProfit() {
+                const profit = parseFloat(profitInput.value) || 0;
+                const expenses = parseFloat(expensesInput.value) || 0;
+                const netProfit = profit - expenses;
+                netProfitElement.textContent = netProfit.toFixed(2) + ' ₽';
+                
+                if (netProfit < 0) {
+                    netProfitElement.style.color = '#d32f2f';
+                } else {
+                    netProfitElement.style.color = '#4CAF50';
+                }
+            }
+            
+            profitInput.addEventListener('input', calculateNetProfit);
+            expensesInput.addEventListener('input', calculateNetProfit);
+            
+            // Initial calculation
+            calculateNetProfit();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Товарно-транспортная накладная № {{ data.номер_накладной }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        h1 {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 14px;
+            margin: 15px 0 10px 0;
+        }
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .signature-block {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature {
+            width: 45%;
+            border-top: 1px solid #000;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-info">
+        <div>Форма № 1-Т</div>
+        <div>Утверждена Постановлением Госкомстата России от 28.11.97 № 78</div>
+    </div>
+
+    <h1>ТОВАРНО-ТРАНСПОРТНАЯ НАКЛАДНАЯ № {{ data.номер_накладной }}</h1>
+
+    <table>
+        <tr>
+            <td width="50%">Грузоотправитель: {{ data.грузоотправитель }}</td>
+            <td>Дата составления: {{ data.дата_составления }}</td>
+        </tr>
+        <tr>
+            <td>Грузополучатель: {{ data.грузополучатель }}</td>
+            <td>Код грузополучателя: </td>
+        </tr>
+        <tr>
+            <td>Плательщик: {{ data.плательщик }}</td>
+            <td>Код плательщика: </td>
+        </tr>
+    </table>
+
+    <h2>1. ТОВАРНЫЙ РАЗДЕЛ (сведения о грузе)</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th width="15%">Код продукции</th>
+                <th width="25%">Наименование продукции</th>
+                <th width="10%">Ед. изм.</th>
+                <th width="10%">Кол-во</th>
+                <th width="15%">Цена, руб.</th>
+                <th width="15%">Сумма, руб.</th>
+                <th width="10%">Вид упаковки</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ data.код_продукции }}</td>
+                <td>{{ data.наименование_товара }}</td>
+                <td>{{ data.единица_измерения }}</td>
+                <td>{{ data.количество }}</td>
+                <td>{{ data.цена }}</td>
+                <td>{{ data.сумма }}</td>
+                <td>{{ data.вид_упаковки }}</td>
+            </tr>
+            <tr>
+                <td colspan="5" style="text-align: right;"><strong>Итого:</strong></td>
+                <td><strong>{{ data.общая_сумма }}</strong></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="signature-block">
+        <div class="signature">
+            Отпуск разрешил<br>
+            {{ data.отпуск_разрешил }}
+        </div>
+        <div class="signature">
+            Главный бухгалтер<br>
+            {{ data.главный_бухгалтер }}
+        </div>
+    </div>
+
+    <h2>2. ТРАНСПОРТНЫЙ РАЗДЕЛ</h2>
+
+    <table>
+        <tr>
+            <td width="30%">Перевозчик:</td>
+            <td>{{ data.перевозчик }}</td>
+        </tr>
+        <tr>
+            <td>Автомобиль:</td>
+            <td>{{ data.автомобиль }}</td>
+        </tr>
+        <tr>
+            <td>Водитель:</td>
+            <td>{{ data.водитель }}</td>
+        </tr>
+        <tr>
+            <td>Пункт погрузки:</td>
+            <td>{{ data.пункт_погрузки }}</td>
+        </tr>
+        <tr>
+            <td>Пункт разгрузки:</td>
+            <td>{{ data.пункт_разгрузки }}</td>
+        </tr>
+        <tr>
+            <td>Срок доставки:</td>
+            <td>{{ data.срок_доставки }}</td>
+        </tr>
+    </table>
+
+    <div class="signature-block" style="margin-top: 50px;">
+        <div class="signature">
+            Груз принял<br>
+            (подпись, ФИО)
+        </div>
+        <div class="signature">
+            Груз сдал<br>
+            (подпись, ФИО)
+        </div>
+    </div>
+</body>
+</html>

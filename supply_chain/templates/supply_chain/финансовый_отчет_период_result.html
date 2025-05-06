@@ -1,0 +1,258 @@
+{% extends 'supply_chain/base.html' %}
+
+{% block title %}Финансовый отчет за период{% endblock %}
+
+{% block content %}
+    <div class="period-report-results">
+        <div class="report-header">
+            <h1>Финансовый отчет за период</h1>
+            <p class="report-period">с {{ дата_начала|date:"d.m.Y" }} по {{ дата_окончания|date:"d.m.Y" }}</p>
+        </div>
+
+        {% if отчеты %}
+            <div class="report-table-container">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Дата отчета</th>
+                            <th>Общая прибыль</th>
+                            <th>Общие расходы</th>
+                            <th>Чистая прибыль</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for отчет in отчеты %}
+                            <tr>
+                                <td>{{ отчет.дата_отчета|date:"d.m.Y" }}</td>
+                                <td class="positive-value">{{ отчет.общая_прибыль }} ₽</td>
+                                <td class="negative-value">{{ отчет.общие_расходы }} ₽</td>
+                                <td class="{% if отчет.чистая_прибыль >= 0 %}positive-value{% else %}negative-value{% endif %}">
+                                    {{ отчет.чистая_прибыль }} ₽
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="report-summary">
+                <div class="summary-item">
+                    <span class="summary-label">Итоговая прибыль:</span>
+                    <span class="summary-value positive-value">{{ итоговая_прибыль }} ₽</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Итоговые расходы:</span>
+                    <span class="summary-value negative-value">{{ итоговые_расходы }} ₽</span>
+                </div>
+                <div class="summary-item total">
+                    <span class="summary-label">Итого чистая прибыль:</span>
+                    <span class="summary-value {% if итоговая_чистая_прибыль >= 0 %}positive-value{% else %}negative-value{% endif %}">
+                        {{ итоговая_чистая_прибыль }} ₽
+                    </span>
+                </div>
+            </div>
+        {% else %}
+            <div class="no-data-message">
+                <div class="message-icon">📊</div>
+                <p>Нет данных за указанный период</p>
+            </div>
+        {% endif %}
+
+        <div class="report-actions">
+            <a href="{% url 'финансовый_отчет_период' %}" class="action-btn primary-btn">
+                <span class="btn-icon">🔄</span> Новый запрос
+            </a>
+            <a href="{% url 'финансовый_отчет_list' %}" class="action-btn secondary-btn">
+                <span class="btn-icon">←</span> Назад к списку
+            </a>
+        </div>
+    </div>
+
+    <style>
+        .period-report-results {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .report-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .report-header h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .report-period {
+            font-size: 1.2rem;
+            color: #2196F3;
+            font-weight: 500;
+        }
+        
+        .report-table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        
+        .report-table th {
+            background-color: #f5f5f5;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #444;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .report-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .report-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .report-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .positive-value {
+            color: #4CAF50;
+            font-weight: 500;
+        }
+        
+        .negative-value {
+            color: #d32f2f;
+            font-weight: 500;
+        }
+        
+        .report-summary {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .summary-item.total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .summary-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .summary-value {
+            font-weight: 700;
+        }
+        
+        .no-data-message {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .message-icon {
+            font-size: 3rem;
+            color: #9E9E9E;
+            margin-bottom: 15px;
+        }
+        
+        .no-data-message p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .report-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .primary-btn {
+            background-color: #2196F3;
+            color: white;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+        }
+        
+        .primary-btn:hover {
+            background-color: #0b7dda;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.3);
+        }
+        
+        .secondary-btn {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .secondary-btn:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-icon {
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .period-report-results {
+                padding: 20px;
+            }
+            
+            .report-table th,
+            .report-table td {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .report-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+{% endblock %}

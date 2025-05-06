@@ -1,0 +1,349 @@
+{% extends 'supply_chain/base.html' %}
+
+{% block title %}Поставщики{% endblock %}
+
+{% block content %}
+    <div class="suppliers-header">
+        <div>
+            <h1>Поставщики</h1>
+            <p class="subtitle">Список всех зарегистрированных поставщиков</p>
+        </div>
+        <a href="{% url 'поставщик_create' %}" class="add-supplier-btn">
+            <span class="btn-icon">+</span> Добавить поставщика
+        </a>
+    </div>
+
+    <div class="suppliers-container">
+        {% if поставщики %}
+            <div class="suppliers-table-container">
+                <table class="suppliers-table">
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Контактное лицо</th>
+                            <th>Адрес</th>
+                            <th>Условия поставки</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for поставщик in поставщики %}
+                            <tr>
+                                <td data-label="Название">
+                                    <div class="supplier-name">{{ поставщик.название }}</div>
+                                </td>
+                                <td data-label="Контактное лицо">{{ поставщик.контактное_лицо }}</td>
+                                <td data-label="Адрес">{{ поставщик.адрес }}</td>
+                                <td data-label="Условия поставки">
+                                    <span class="delivery-terms">{{ поставщик.условия_поставки }}</span>
+                                </td>
+                                <td class="actions-cell">
+                                    <div class="action-buttons">
+                                        <a href="{% url 'поставщик_update' поставщик.pk %}" class="action-btn edit-btn" title="Изменить">
+                                            <span class="action-icon">✏️</span>
+                                        </a>
+                                        <a href="{% url 'поставщик_delete' поставщик.pk %}" class="action-btn delete-btn" title="Удалить">
+                                            <span class="action-icon">🗑️</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🏭</div>
+                <h3>Нет зарегистрированных поставщиков</h3>
+                <p>Начните с добавления нового поставщика</p>
+                <a href="{% url 'поставщик_create' %}" class="add-supplier-btn">
+                    <span class="btn-icon">+</span> Добавить поставщика
+                </a>
+            </div>
+        {% endif %}
+
+        {% if is_paginated %}
+            <div class="pagination-container">
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1" class="page-nav first" title="Первая страница">
+                            <span>«</span>
+                        </a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="page-nav prev" title="Предыдущая страница">
+                            <span>‹</span>
+                        </a>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <span class="page-number active">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}" class="page-number">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="page-nav next" title="Следующая страница">
+                            <span>›</span>
+                        </a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="page-nav last" title="Последняя страница">
+                            <span>»</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <style>
+        .suppliers-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .suppliers-header h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .add-supplier-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: #fff3a0;
+            color: #333;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: none;
+        }
+        
+        .add-supplier-btn:hover {
+            background-color: #ffe872;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+        
+        .btn-icon {
+            margin-right: 8px;
+        }
+        
+        .suppliers-table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: white;
+        }
+        
+        .suppliers-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        
+        .suppliers-table thead {
+            background-color: #fff9cc;
+        }
+        
+        .suppliers-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #fff3a0;
+        }
+        
+        .suppliers-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        
+        .suppliers-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .suppliers-table tbody tr:hover {
+            background-color: #fffef5;
+        }
+        
+        .supplier-name {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .delivery-terms {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .actions-cell {
+            white-space: nowrap;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .edit-btn {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .delete-btn {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+        
+        .empty-state h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .empty-state p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .pagination {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .page-number, .page-nav {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 10px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            text-decoration: none;
+            color: #333;
+            background-color: white;
+            border: 1px solid #eee;
+            transition: all 0.2s ease;
+        }
+        
+        .page-number:hover, .page-nav:hover {
+            background-color: #fff9cc;
+            border-color: #fff3a0;
+        }
+        
+        .page-number.active {
+            background-color: #fff3a0;
+            border-color: #e6d87e;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .suppliers-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .suppliers-table {
+                font-size: 0.85rem;
+            }
+            
+            .suppliers-table th, 
+            .suppliers-table td {
+                padding: 10px 8px;
+            }
+            
+            .suppliers-table td {
+                display: block;
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            
+            .suppliers-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 15px;
+                width: calc(50% - 15px);
+                padding-right: 10px;
+                font-weight: 600;
+                text-align: left;
+            }
+            
+            .suppliers-table thead {
+                display: none;
+            }
+            
+            .suppliers-table tr {
+                display: block;
+                margin-bottom: 15px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+            
+            .actions-cell {
+                text-align: center;
+            }
+            
+            .actions-cell::before {
+                display: none;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+{% endblock %}
